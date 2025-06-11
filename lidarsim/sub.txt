@@ -1,0 +1,48 @@
+#include <rclcpp/rclcpp.hpp>                     // ROS2 C++ 노드 라이브러리
+#include <geometry_msgs/msg/vector3.hpp>         // geometry_msgs의 Vector3 메시지 타입
+#include "dxl/dxl.hpp"                           // Dynamixel 제어용 헤더
+
+class MotorCmdSubscriber : public rclcpp::Node {
+public:
+    MotorCmdSubscriber() : Node("motor_cmd_subscriber") {
+        subscription_ = this->create_subscription<geometry_msgs::msg::Vector3>(
+            "topic_dxlpub", 10,
+            std::bind(&MotorCmdSubscriber::cmd_callback, this, std::placeholders::_1)
+        );
+        RCLCPP_INFO(this->get_logger(), "topic_dxlpub 구독 시작!");
+
+        // Dynamixel 객체 생성 및 포트 오픈
+        if (!dxl_.open()) {
+            RCLCPP_ERROR(this->get_logger(), "Dynamixel 포트 오픈 실패!");
+            rclcpp::shutdown();
+        }
+    }
+
+    ~MotorCmdSubscriber() {
+        dxl_.close(); // 노드 종료 시 모터 정지 및 포트 닫기
+    }
+
+private:
+    void cmd_callback(const geometry_msgs::msg::Vector3::SharedPtr msg) {
+        double left_speed = msg->x;   // 왼쪽 바퀴 속도
+        double right_speed = msg->y;  // 오른쪽 바퀴 속도
+
+        RCLCPP_INFO(this->get_logger(), "받은 모터 속도: left=%.1f, right=%.1f", left_speed, right_speed);
+
+        // Dynamixel에 속도 명령 전달 (정수형으로 변환)
+        bool result = dxl_.setVelocity(static_cast<int>(left_speed), static_cast<int>(right_speed));
+        if (!result) {
+            RCLCPP_ERROR(this->get_logger(), "모터 속도 설정 실패!");
+        }
+    }
+
+    rclcpp::Subscription<geometry_msgs::msg::Vector3>::SharedPtr subscription_; // 구독자 포인터
+    Dxl dxl_; // Dynamixel 제어 객체
+};
+
+int main(int argc, char **argv) {
+    rclcpp::init(argc, argv); // ROS2 초기화
+    rclcpp::spin(std::make_shared<MotorCmdSubscriber>()); // 노드 실행 및 콜백 대기
+    rclcpp::shutdown(); // ROS2 종료
+    return 0;
+}
