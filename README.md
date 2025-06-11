@@ -105,5 +105,3 @@ void find_connected_points(const Mat &mask, Point close, vector<Point> &connecte
 ![4a3f0574_gxpvqq](https://github.com/user-attachments/assets/a2fd8ece-814a-478f-9504-f6a0f09f9dba)
 
 
-
-카메라 실제 구동 영상입니다
