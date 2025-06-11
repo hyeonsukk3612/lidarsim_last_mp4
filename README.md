@@ -45,4 +45,41 @@ ros2 run lidarsim obstacle_avoidance
 
 ***
 
+코드설명
+
+8방향으로 찾습니다. 갔던 곳인지도 판단합니다.
+
+
+void find_connected_points(const Mat &mask, Point close, vector<Point> &connected_points) {
+    int rows = mask.rows, cols = mask.cols;
+    Mat visited = Mat::zeros(rows, cols, CV_8U); // (방문 여부 저장)
+    queue<Point> q;
+    q.push(close);
+    visited.at<uchar>(close) = 1;
+    connected_points.push_back(close);
+
+    int dx[] = {-1, -1, -1, 0, 0, 1, 1, 1}; // (8방향 x좌표 변화)
+    int dy[] = {-1, 0, 1, -1, 1, -1, 0, 1}; // (8방향 y좌표 변화)
+
+    while (!q.empty()) {
+        Point p = q.front(); q.pop();
+        for (int i = 0; i < 8; ++i) {
+            int nx = p.x + dx[i], ny = p.y + dy[i];
+            if (nx >= 0 && nx < cols && ny >= 0 && ny < rows) {
+                // (미방문 빨간점이면 방문 처리 및 큐 삽입)
+                if (mask.at<uchar>(ny, nx) > 0 && visited.at<uchar>(ny, nx) == 0) {
+                    visited.at<uchar>(ny, nx) = 1;
+                    Point np(nx, ny);
+                    connected_points.push_back(np);
+                    q.push(np);
+                }
+            }
+        }
+    }
+}
+
+
+![4a3f0574_gxpvqq](https://github.com/user-attachments/assets/4e3c913c-1b99-4734-a5d1-b0ff2b36e596)
+
+
 카메라 실제 구동 영상입니다
