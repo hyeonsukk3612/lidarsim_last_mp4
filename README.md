@@ -77,8 +77,6 @@ void find_connected_points(const Mat &mask, Point close, vector<Point> &connecte
             int nx = p.x + dx[i], ny = p.y + dy[i];
             
             if (nx >= 0 && nx < cols && ny >= 0 && ny < rows) {
-            
-                // (미방문 빨간점이면 방문 처리 및 큐 삽입)
                 
                 if (mask.at<uchar>(ny, nx) > 0 && visited.at<uchar>(ny, nx) == 0) {
                 
