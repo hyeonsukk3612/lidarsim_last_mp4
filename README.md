@@ -51,31 +51,53 @@ ros2 run lidarsim obstacle_avoidance
 
 
 void find_connected_points(const Mat &mask, Point close, vector<Point> &connected_points) {
+
     int rows = mask.rows, cols = mask.cols;
+    
     Mat visited = Mat::zeros(rows, cols, CV_8U); // (방문 여부 저장)
+    
     queue<Point> q;
+    
     q.push(close);
+    
     visited.at<uchar>(close) = 1;
+    
     connected_points.push_back(close);
 
     int dx[] = {-1, -1, -1, 0, 0, 1, 1, 1}; // (8방향 x좌표 변화)
+    
     int dy[] = {-1, 0, 1, -1, 1, -1, 0, 1}; // (8방향 y좌표 변화)
 
     while (!q.empty()) {
+    
         Point p = q.front(); q.pop();
+        
         for (int i = 0; i < 8; ++i) {
+        
             int nx = p.x + dx[i], ny = p.y + dy[i];
+            
             if (nx >= 0 && nx < cols && ny >= 0 && ny < rows) {
+            
                 // (미방문 빨간점이면 방문 처리 및 큐 삽입)
+                
                 if (mask.at<uchar>(ny, nx) > 0 && visited.at<uchar>(ny, nx) == 0) {
+                
                     visited.at<uchar>(ny, nx) = 1;
+                    
                     Point np(nx, ny);
+                    
                     connected_points.push_back(np);
+                    
                     q.push(np);
+                    
                 }
+                
             }
+            
         }
+        
     }
+    
 }
 
 
