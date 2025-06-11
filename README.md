@@ -157,6 +157,9 @@ void find_connected_points(const Mat &mask, Point close, vector<Point> &connecte
     }
 
     
+![image](https://github.com/user-attachments/assets/c42fa673-a7ff-4da1-b585-1b49fa86a007)
+
+    
 ![image](https://github.com/user-attachments/assets/1fd2ae84-53cc-44dc-ad9c-a89fbdd022a7)
 
 
