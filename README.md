@@ -143,9 +143,20 @@ void find_connected_points(const Mat &mask, Point close, vector<Point> &connecte
     vector<Point> right_region = {Point(250,125), Point(375,125), Point(375,250), Point(250,250)};
 
     밑사진과 같이 빨간점이 없으면 오른쪽 영역일경우 (0,250) 방향으로 긋게합니다 
+    
+    if (points.empty()) {
+    
+        line(frame, center, default_point, Scalar(255, 0, 0), 2);
+        
+        closest_pt = default_point;
+        
+        dist_center = norm(center - default_point);
+        
+        return;
+        
+    }
 
+    
 ![image](https://github.com/user-attachments/assets/1fd2ae84-53cc-44dc-ad9c-a89fbdd022a7)
 
-
-    끝점 좌표를 연결하여 검정색선을 만들어냅니다.
 
