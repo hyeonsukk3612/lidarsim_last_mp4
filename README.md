@@ -105,3 +105,39 @@ void find_connected_points(const Mat &mask, Point close, vector<Point> &connecte
 ![4a3f0574_gxpvqq](https://github.com/user-attachments/assets/a2fd8ece-814a-478f-9504-f6a0f09f9dba)
 
 
+***
+
+    // 영역 마스크 생성: 사각형 내부만 255
+    
+    Mat region_mask = Mat::zeros(mask.size(), CV_8U);
+    
+    vector<vector<Point>> contours = {region_contour};
+    
+    fillPoly(region_mask, contours, Scalar(255));
+    
+    내부만 사각형인부분을 만들어내고
+
+    Mat red_region;
+    
+    bitwise_and(mask, region_mask, red_region);
+
+    and연산으로 빨강점 부분을 추출합니다
+
+    Point get_line_endpoint(Point start, Point target, int len) {
+    
+    double dx = target.x - start.x;
+    
+    double dy = target.y - start.y;
+    
+    double norm_val = sqrt(dx*dx + dy*dy);
+    
+    if (norm_val < 1e-6) norm_val = 1; // 0 나눗셈 방지 0에가까운값
+    
+    double nx = dx / norm_val, ny = dy / norm_val;
+    
+    return Point(start.x + int(nx * len), start.y + int(ny * len));
+    
+}
+
+    끝점 좌표를 연결하여 검정색선을 만들어냅니다.
+
