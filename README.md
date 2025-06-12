@@ -161,7 +161,11 @@ void find_connected_points(const Mat &mask, Point close, vector<Point> &connecte
     
 ![image](https://github.com/user-attachments/assets/c42fa673-a7ff-4da1-b585-1b49fa86a007)
 
-    
+***
 
+실제출력영상입니다
 
+[https://youtu.be/24GPV--2Mh8](https://youtu.be/24GPV--2Mh8)
+
+***
 
